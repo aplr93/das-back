@@ -1,5 +1,6 @@
 package com.webdev.dasback.controller;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.webdev.dasback.controller.form.CustomerForm;
 import com.webdev.dasback.model.Customer;
@@ -33,9 +35,12 @@ public class CustomerController {
 	}
 	
 	@PostMapping
-	public void cadastrar(@RequestBody @Valid CustomerForm customerForm) {
+	public ResponseEntity<Customer> create(@RequestBody @Valid CustomerForm customerForm, UriComponentsBuilder uriBuilder) {
 		Customer customer = customerForm.convertToCustomer();
 		customerRepository.save(customer);
+		
+		URI uri = uriBuilder.path("/customers/{id}").buildAndExpand(customer.getId()).toUri(); 
+		return ResponseEntity.created(uri).body(customer);
 	}
 	
 	@PutMapping("/{id}")
