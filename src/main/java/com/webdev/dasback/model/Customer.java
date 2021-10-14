@@ -7,12 +7,13 @@ import javax.persistence.Id;
 
 @Entity
 public class Customer {
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	private String cpf;
 	private String firstName;
 	private String lastName;
 	
+	public Customer() {	}
 	
 	public Customer(String cpf, String firstName, String lastName) {
 		this.cpf = cpf;
