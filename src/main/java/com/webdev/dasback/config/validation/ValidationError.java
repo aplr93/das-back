@@ -1,5 +1,8 @@
 package com.webdev.dasback.config.validation;
 
+/*
+ * This class represents each HTTP request field that didn't fit back end expectations
+ */
 public class ValidationError {
 
 	private String fieldName;

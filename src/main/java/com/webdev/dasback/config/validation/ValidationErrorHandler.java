@@ -13,13 +13,17 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/*
+ * This class intercepts any exception during processing of API requests, and returns a much more friendly error message to the front end developer
+ */
 @RestControllerAdvice
 public class ValidationErrorHandler {
 	
 	@Autowired
 	private MessageSource messageSource;
 	
-	//This makes any http request processing error return a 400 return code (error) instead of 200, which is the default framework behavior
+	/*This makes any HTTP request processing error return a 400 return code (error) instead of 200, which was the default framework behavior,
+	even after throwing exceptions*/
 	@ResponseStatus(code = HttpStatus.BAD_REQUEST) 
 	@ExceptionHandler(MethodArgumentNotValidException.class) 
 	public List<ValidationError> handle(MethodArgumentNotValidException exception) {

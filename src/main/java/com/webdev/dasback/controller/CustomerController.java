@@ -49,13 +49,14 @@ public class CustomerController {
 		Customer customer = customerForm.convertToCustomer();
 		customerRepository.save(customer);
 		
+		//Returns the same resource that was created as a JSON response to the front end
 		URI uri = uriBuilder.path("/customers/{id}").buildAndExpand(customer.getId()).toUri(); 
 		return ResponseEntity.created(uri).body(customer);
 	}
 	
 	@PutMapping("/{id}")
 	@Transactional
-	public ResponseEntity<Customer> atualizar(@PathVariable Long id, @RequestBody @Valid CustomerForm form) {
+	public ResponseEntity<Customer> update(@PathVariable Long id, @RequestBody @Valid CustomerForm form) {
 		Optional<Customer> customerOptional = customerRepository.findById(id);
 		if (customerOptional.isPresent()) {
 			Customer customer = form.update((long)id, customerRepository);
@@ -66,7 +67,7 @@ public class CustomerController {
 	
 	@Transactional
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> remover(@PathVariable Long id) {
+	public ResponseEntity<?> remove(@PathVariable Long id) {
 		Optional<Customer> topicoOptional = customerRepository.findById(id);
 		if (topicoOptional.isPresent()) {
 			customerRepository.deleteById(id);
