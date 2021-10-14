@@ -34,6 +34,15 @@ public class CustomerController {
 		return customerRepository.findAll();
 	}
 	
+	@GetMapping("/{id}")
+	public ResponseEntity<Customer> findById(@PathVariable Long id) {
+		Optional<Customer> topicoOptional = customerRepository.findById(id);
+		if(topicoOptional.isPresent()) {
+			return ResponseEntity.ok(topicoOptional.get()) ;
+		}
+		return ResponseEntity.notFound().build();
+	}
+	
 	@PostMapping
 	public ResponseEntity<Customer> create(@RequestBody @Valid CustomerForm customerForm, UriComponentsBuilder uriBuilder) {
 		Customer customer = customerForm.convertToCustomer();
