@@ -1,6 +1,5 @@
 package com.webdev.dasback.model;
 
-import com.webdev.dasback.repository.ProductRepository;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Entity;

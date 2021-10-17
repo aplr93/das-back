@@ -1,13 +1,14 @@
 package com.webdev.dasback.controller;
 
-import com.webdev.dasback.model.Customer;
 import com.webdev.dasback.model.Product;
 import com.webdev.dasback.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -21,7 +22,7 @@ public class ProductController {
     private ProductRepository productRepository;
 
     @GetMapping
-    public List<Product> getProducts(String description) {
+    public List<Product> getProduct(String description) {
         List<Product> product;
         if (description == null) {
             product = productRepository.findAll();
@@ -40,6 +41,43 @@ public class ProductController {
 
         URI uri = uriBuilder.path("/products/{id}").buildAndExpand(product.getId()).toUri();
         return ResponseEntity.created(uri).body(product);
+    }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody @Valid Product product) {
+        Optional<Product> productData = productRepository.findById(id);
+
+        if (productData.isPresent()) {
+            Product newProduct = productData.get();
+            newProduct.setDescription(product.getDescription());
+            return new ResponseEntity<>(productRepository.save(newProduct), HttpStatus.OK);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity removeProduct(@PathVariable Long id) {
+        Optional<Product> productData = productRepository.findById(id);
+
+        if (productData.isPresent()) {
+            productRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping
+    @Transactional
+    public ResponseEntity removeAllProduct() {
+        try{
+            productRepository.deleteAll();
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return (ResponseEntity) ResponseEntity.internalServerError();
+        }
     }
 
 }

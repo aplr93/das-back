@@ -37,9 +37,9 @@ public class CustomerController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Customer> findById(@PathVariable Long id) {
-		Optional<Customer> topicoOptional = customerRepository.findById(id);
-		if(topicoOptional.isPresent()) {
-			return ResponseEntity.ok(topicoOptional.get()) ;
+		Optional<Customer> customerOptional = customerRepository.findById(id);
+		if(customerOptional.isPresent()) {
+			return ResponseEntity.ok(customerOptional.get()) ;
 		}
 		return ResponseEntity.notFound().build();
 	}
@@ -68,8 +68,8 @@ public class CustomerController {
 	@Transactional
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> remove(@PathVariable Long id) {
-		Optional<Customer> topicoOptional = customerRepository.findById(id);
-		if (topicoOptional.isPresent()) {
+		Optional<Customer> customerOptional = customerRepository.findById(id);
+		if (customerOptional.isPresent()) {
 			customerRepository.deleteById(id);
 			return ResponseEntity.ok().build();
 		}
