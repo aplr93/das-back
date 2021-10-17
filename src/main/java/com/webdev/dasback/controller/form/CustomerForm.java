@@ -23,7 +23,7 @@ public class CustomerForm {
 	}
 	
 	public Customer update(Long id, CustomerRepository customerRepository) {
-		Customer customer = customerRepository.getOne(id);
+		Customer customer = customerRepository.getById(id);
 		customer.setCpf(this.cpf);
 		customer.setFirstName(this.firstName);
 		customer.setLastName(this.lastName);		
