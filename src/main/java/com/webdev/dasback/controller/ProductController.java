@@ -28,8 +28,7 @@ public class ProductController {
             product = productRepository.findAll();
         }
         else {
-            System.out.println(description);
-            product = productRepository.findByDescriptionEquals(description);
+            product = productRepository.findByDescription(description);
         }
         return product;
 
@@ -46,7 +45,7 @@ public class ProductController {
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody @Valid Product product) {
-        Optional<Product> productData = productRepository.findById(id);
+        Optional<Product> productData = Optional.of(productRepository.getById(id));
 
         if (productData.isPresent()) {
             Product newProduct = productData.get();
@@ -59,7 +58,7 @@ public class ProductController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity removeProduct(@PathVariable Long id) {
-        Optional<Product> productData = productRepository.findById(id);
+        Optional<Product> productData = Optional.of(productRepository.getById(id));
 
         if (productData.isPresent()) {
             productRepository.deleteById(id);
@@ -71,7 +70,7 @@ public class ProductController {
 
     @DeleteMapping
     @Transactional
-    public ResponseEntity removeAllProduct() {
+    public ResponseEntity removeAllProducts() {
         try{
             productRepository.deleteAll();
             return ResponseEntity.ok().build();

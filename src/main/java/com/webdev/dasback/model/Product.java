@@ -9,7 +9,11 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+
+
 @Entity
+@EnableJpaRepositories
 public class Product {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
