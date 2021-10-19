@@ -31,21 +31,29 @@ public class CustomerController {
 	private CustomerRepository customerRepository;
 	
 	@GetMapping
-	public List<Customer> list(){
-		return customerRepository.findAll();
+	public List<Customer> getCustomer(String cpf){
+		// returns all customers or filter by cpf
+		// example by cpf - http://localhost:8111/customers?cpf=66666666666
+		// example all customers - http://localhost:8111/customers
+		if (cpf == null) {
+			return customerRepository.findAll();
+		}
+		else {
+			return customerRepository.findByCpf(cpf);
+		}
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Customer> findById(@PathVariable Long id) {
-		Optional<Customer> topicoOptional = customerRepository.findById(id);
-		if(topicoOptional.isPresent()) {
-			return ResponseEntity.ok(topicoOptional.get()) ;
+	public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
+		Optional<Customer> customerOptional = customerRepository.findById(id);
+		if(customerOptional.isPresent()) {
+			return ResponseEntity.ok(customerOptional.get()) ;
 		}
 		return ResponseEntity.notFound().build();
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<Customer> create(@RequestBody @Valid CustomerForm customerForm, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<Customer> createCustomer(@RequestBody @Valid CustomerForm customerForm, UriComponentsBuilder uriBuilder) {
 		Customer customer = customerForm.convertToCustomer();
 		customerRepository.save(customer);
 		
@@ -56,7 +64,7 @@ public class CustomerController {
 	
 	@PutMapping("/{id}")
 	@Transactional
-	public ResponseEntity<Customer> update(@PathVariable Long id, @RequestBody @Valid CustomerForm form) {
+	public ResponseEntity<Customer> updateCustomer(@PathVariable Long id, @RequestBody @Valid CustomerForm form) {
 		Optional<Customer> customerOptional = customerRepository.findById(id);
 		if (customerOptional.isPresent()) {
 			Customer customer = form.update((long)id, customerRepository);
@@ -67,9 +75,9 @@ public class CustomerController {
 	
 	@Transactional
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> remove(@PathVariable Long id) {
-		Optional<Customer> topicoOptional = customerRepository.findById(id);
-		if (topicoOptional.isPresent()) {
+	public ResponseEntity<?> removeCustomer(@PathVariable Long id) {
+		Optional<Customer> customerOptional = customerRepository.findById(id);
+		if (customerOptional.isPresent()) {
 			customerRepository.deleteById(id);
 			return ResponseEntity.ok().build();
 		}

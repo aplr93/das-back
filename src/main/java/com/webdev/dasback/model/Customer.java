@@ -1,11 +1,14 @@
 package com.webdev.dasback.model;
 
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
+@EnableJpaRepositories
 public class Customer {
 	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
