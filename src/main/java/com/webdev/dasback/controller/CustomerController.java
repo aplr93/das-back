@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import com.webdev.dasback.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -55,6 +56,13 @@ public class CustomerController {
 	@PostMapping
 	public ResponseEntity<Customer> createCustomer(@RequestBody @Valid CustomerForm customerForm, UriComponentsBuilder uriBuilder) {
 		Customer customer = customerForm.convertToCustomer();
+
+		List<Customer> checkCpfRepeat = customerRepository.findByCpf(customer.getCpf());
+
+		if(checkCpfRepeat.size() > 0) {
+			return ResponseEntity.notFound().build();
+		}
+
 		customerRepository.save(customer);
 		
 		//Returns the same resource that was created as a JSON response to the front end
