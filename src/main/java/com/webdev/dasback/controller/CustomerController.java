@@ -55,6 +55,13 @@ public class CustomerController {
 	@PostMapping
 	public ResponseEntity<Customer> createCustomer(@RequestBody @Valid CustomerForm customerForm, UriComponentsBuilder uriBuilder) {
 		Customer customer = customerForm.convertToCustomer();
+
+		List<Customer> checkCpfRepeat = customerRepository.findByCpf(customer.getCpf());
+
+		if(checkCpfRepeat.size() > 0) {
+			return ResponseEntity.notFound().build();
+		}
+
 		customerRepository.save(customer);
 		
 		//Returns the same resource that was created as a JSON response to the front end
