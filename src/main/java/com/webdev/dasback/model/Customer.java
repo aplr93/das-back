@@ -2,13 +2,11 @@ package com.webdev.dasback.model;
 
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @EnableJpaRepositories
+@Table(name="customer")
 public class Customer {
 	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
@@ -48,5 +46,5 @@ public class Customer {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	
+
 }

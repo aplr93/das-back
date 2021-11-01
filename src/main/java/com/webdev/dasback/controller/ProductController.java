@@ -31,7 +31,6 @@ public class ProductController {
             product = productRepository.findByDescription(description);
         }
         return product;
-
     }
 
     @PostMapping
@@ -55,6 +54,7 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity removeProduct(@PathVariable Long id) {
