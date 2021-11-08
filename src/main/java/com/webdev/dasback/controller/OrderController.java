@@ -33,6 +33,8 @@ public class OrderController {
     public ResponseEntity<Order> createOrder(@RequestBody @Valid Order order, UriComponentsBuilder uriBuilder) {
         orderRepository.save(order);
 
+        System.out.println(order.getItems());
+
         URI uri = uriBuilder.path("/orders/{id}").buildAndExpand(order.getId()).toUri();
         return ResponseEntity.created(uri).body(order);
     }
