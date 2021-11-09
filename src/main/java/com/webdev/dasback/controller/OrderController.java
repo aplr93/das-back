@@ -1,6 +1,8 @@
 package com.webdev.dasback.controller;
 
 import com.webdev.dasback.model.Order;
+import com.webdev.dasback.model.OrderItem;
+import com.webdev.dasback.repository.OrderItemRepository;
 import com.webdev.dasback.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,9 @@ public class OrderController {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private OrderItemRepository orderItemRepository;
+
     @GetMapping
     public List<Order> getOrders() {
         List<Order> order = orderRepository.findAll();
@@ -30,10 +35,14 @@ public class OrderController {
     }
 
     @PostMapping
+    @Transactional
     public ResponseEntity<Order> createOrder(@RequestBody @Valid Order order, UriComponentsBuilder uriBuilder) {
         orderRepository.save(order);
 
-        System.out.println(order.getItems());
+        for (OrderItem items : order.getItems()) {
+            items.setOrder(order);
+            orderItemRepository.save(items);
+        }
 
         URI uri = uriBuilder.path("/orders/{id}").buildAndExpand(order.getId()).toUri();
         return ResponseEntity.created(uri).body(order);
@@ -47,6 +56,12 @@ public class OrderController {
         if (orderData.isPresent()) {
             Order newOrder = orderData.get();
             newOrder.setDate(order.getDate());
+
+            for (OrderItem items : order.getItems()) {
+                items.setOrder(newOrder);
+                orderItemRepository.save(items);
+            }
+
             return new ResponseEntity<>(orderRepository.save(newOrder), HttpStatus.OK);
         } else {
             return ResponseEntity.notFound().build();
