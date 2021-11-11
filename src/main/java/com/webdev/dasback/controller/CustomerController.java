@@ -108,13 +108,13 @@ public class CustomerController {
 		if(customerOptional.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
-		if(newCpfProvided(customerOptional, form) && cpfAlreadyRegistered(form.getCpf())) {
+		if(previousCpfWasModified(customerOptional, form) && cpfAlreadyRegistered(form.getCpf())) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Já existe um cliente com o CPF " + form.getCpf() + "!");
 		}
 		return null;
 	}
 
-	private boolean newCpfProvided(Optional<Customer> customerOptional, CustomerForm form) {
+	private boolean previousCpfWasModified(Optional<Customer> customerOptional, CustomerForm form) {
 		boolean returnValue = true;
 		if(customerOptional.isPresent()) {
 			returnValue = ! customerOptional.get().getCpf().equals(form.getCpf());  
