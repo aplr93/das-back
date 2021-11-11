@@ -56,11 +56,7 @@ public class CustomerController {
 	public ResponseEntity<Object> createCustomer(@RequestBody @Valid CustomerForm customerForm, UriComponentsBuilder uriBuilder) {
 		Customer customer = customerForm.convertToCustomer();
 
-		if(cpfAlreadyRegistered(customer.getCpf())) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Já existe um cliente com o CPF " + customerForm.getCpf() + "!");
-		}
-		
-		return commitCustomerCreation(customer, uriBuilder);		
+		return validateAndProcessCustomerCreation(customer, uriBuilder); 		
 	}
 
 	@PutMapping("/{id}")
@@ -87,7 +83,7 @@ public class CustomerController {
 	}
 
 	private ResponseEntity<Object> buildCustomerRemovalErrorResponse(Optional<Customer> customerOptional) {
-		if(customerOptional.isEmpty()) {
+		if( ! customerOptional.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
 		return null;
@@ -105,7 +101,7 @@ public class CustomerController {
 
 	private ResponseEntity<Object> buildCustomerUpdateErrorResponse(Optional<Customer> customerOptional,
 			@Valid CustomerForm form) {
-		if(customerOptional.isEmpty()) {
+		if( ! customerOptional.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
 		if(previousCpfWasModified(customerOptional, form) && cpfAlreadyRegistered(form.getCpf())) {
@@ -143,5 +139,22 @@ public class CustomerController {
 		}
 		
 		return commitCustomerUpdate(customerOptional.get(), form);
+	}
+	
+	private ResponseEntity<Object> validateAndProcessCustomerCreation(Customer customer,
+			UriComponentsBuilder uriBuilder) {
+		ResponseEntity<Object> errorResponse = buildCustomerCreationErrorResponse(customer);
+		if(errorResponse != null) {
+			return errorResponse;
+		}
+		
+		return commitCustomerCreation(customer, uriBuilder);
+	}
+
+	private ResponseEntity<Object> buildCustomerCreationErrorResponse(Customer customer) {
+		if(cpfAlreadyRegistered(customer.getCpf())) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Já existe um cliente com o CPF " + customer.getCpf() + "!");
+		}
+		return null;
 	}
 }
