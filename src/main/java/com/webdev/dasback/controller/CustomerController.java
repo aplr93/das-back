@@ -83,7 +83,7 @@ public class CustomerController {
 			return errorResponseEntity;
 		}
 
-		return commitCustomerRemoval(customerOptional.get().getId());
+		return commitCustomerRemoval(customerOptional.get());
 	}
 
 	private ResponseEntity<Object> buildCustomerRemovalErrorResponse(Optional<Customer> customerOptional) {
@@ -93,9 +93,9 @@ public class CustomerController {
 		return null;
 	}
 
-	private ResponseEntity<Object> commitCustomerRemoval(Long id) {
-		customerRepository.deleteById(id);
-		return ResponseEntity.ok().build();
+	private ResponseEntity<Object> commitCustomerRemoval(Customer customer) {
+		customerRepository.deleteById(customer.getId());
+		return ResponseEntity.ok(customer);
 	}
 	
 	private ResponseEntity<Object> commitCustomerUpdate(Customer customer, CustomerForm form) {
