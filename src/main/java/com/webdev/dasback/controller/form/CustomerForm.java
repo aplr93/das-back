@@ -22,12 +22,10 @@ public class CustomerForm {
 		return new Customer(cpf, firstName, lastName);
 	}
 	
-	public Customer update(Long id, CustomerRepository customerRepository) {
-		Customer customer = customerRepository.getById(id);
+	public void updateEntity(Customer customer) {
 		customer.setCpf(this.cpf);
 		customer.setFirstName(this.firstName);
-		customer.setLastName(this.lastName);		
-		return customer;
+		customer.setLastName(this.lastName);
 	}
 	
 	public String getCpf() {
