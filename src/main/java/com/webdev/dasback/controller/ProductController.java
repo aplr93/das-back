@@ -33,6 +33,15 @@ public class ProductController {
         return product;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+		Optional<Product> productOptional = productRepository.findById(id);
+		if(productOptional.isPresent()) {
+			return ResponseEntity.ok(productOptional.get()) ;
+		}
+		return ResponseEntity.notFound().build();
+	}
+
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody @Valid Product product, UriComponentsBuilder uriBuilder) {
         productRepository.save(product);

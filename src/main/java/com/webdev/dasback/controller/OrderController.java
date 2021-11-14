@@ -54,15 +54,21 @@ public class OrderController {
         Optional<Order> orderData = Optional.of(orderRepository.getById(id));
 
         if (orderData.isPresent()) {
-            Order newOrder = orderData.get();
+
+            orderItemRepository.deleteAll(orderData.get().getItems());
+            orderRepository.save(orderData.get());
+
+            Order newOrder = orderRepository.getById(id);
             newOrder.setDate(order.getDate());
 
             for (OrderItem items : order.getItems()) {
                 items.setOrder(newOrder);
                 orderItemRepository.save(items);
             }
+            orderRepository.save(newOrder);
 
-            return new ResponseEntity<>(orderRepository.save(newOrder), HttpStatus.OK);
+            return new ResponseEntity<>(order, HttpStatus.OK);
+
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -74,7 +80,13 @@ public class OrderController {
         Optional<Order> orderData = Optional.of(orderRepository.getById(id));
 
         if (orderData.isPresent()) {
+
+            for (OrderItem item : orderData.get().getItems()) {
+                item.setOrder(orderData.get());
+                orderItemRepository.delete(item);
+            }
             orderRepository.deleteById(id);
+
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();
