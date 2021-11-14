@@ -39,9 +39,9 @@ public class OrderController {
     public ResponseEntity<Order> createOrder(@RequestBody @Valid Order order, UriComponentsBuilder uriBuilder) {
         orderRepository.save(order);
 
-        for (OrderItem items : order.getItems()) {
-            items.setOrder(order);
-            orderItemRepository.save(items);
+        for (OrderItem item : order.getItems()) {
+            item.setOrder(order);
+            orderItemRepository.save(item);
         }
 
         URI uri = uriBuilder.path("/orders/{id}").buildAndExpand(order.getId()).toUri();
