@@ -61,9 +61,9 @@ public class OrderController {
             Order newOrder = orderRepository.getById(id);
             newOrder.setDate(order.getDate());
 
-            for (OrderItem items : order.getItems()) {
-                items.setOrder(newOrder);
-                orderItemRepository.save(items);
+            for (OrderItem item : order.getItems()) {
+                item.setOrder(newOrder);
+                orderItemRepository.save(item);
             }
             orderRepository.save(newOrder);
 
