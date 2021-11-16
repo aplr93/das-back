@@ -1,8 +1,11 @@
 package com.webdev.dasback.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 @Entity
 public class OrderItem {
@@ -18,23 +21,24 @@ public class OrderItem {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    private int amount;
+    @Min(value=1)
+    private int quantity;
 
     public OrderItem() {
     }
 
-    public OrderItem(Order order, Product product, int amount) {
+    public OrderItem(Order order, Product product, int quantity) {
         this.order = order;
         this.product = product;
-        this.amount = amount;
+        this.quantity = quantity;
     }
 
-    public int getAmount() {
-        return amount;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setAmount(int amount) {
-        this.amount = amount;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public Product getProduct() {

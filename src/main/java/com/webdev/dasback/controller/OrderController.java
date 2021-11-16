@@ -2,6 +2,7 @@ package com.webdev.dasback.controller;
 
 import com.webdev.dasback.model.Order;
 import com.webdev.dasback.model.OrderItem;
+import com.webdev.dasback.model.Product;
 import com.webdev.dasback.repository.OrderItemRepository;
 import com.webdev.dasback.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,15 @@ public class OrderController {
         List<Order> order = orderRepository.findAll();
 
         return order;
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Order> getOrdersById(@PathVariable Long id) {
+        Optional<Order> orderOptional = orderRepository.findById(id);
+        if(orderOptional.isPresent()) {
+            return ResponseEntity.ok(orderOptional.get()) ;
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping
