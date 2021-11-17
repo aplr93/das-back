@@ -63,6 +63,7 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity removeProduct(@PathVariable Long id) {
