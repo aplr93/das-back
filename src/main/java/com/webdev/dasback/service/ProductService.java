@@ -42,14 +42,13 @@ public class ProductService  {
     }
 
     @Transactional
-    public Product update(Product product, long id) {
+    public Product update(Product product, Long id) {
         Optional<Product> optionalProduct = Optional.of(productRepository.getById(id));
 
         if (optionalProduct.isPresent()) {
             Product newProduct = optionalProduct.get();
             newProduct.setDescription(product.getDescription());
-            productRepository.save(newProduct);
-            return newProduct;
+            return productRepository.save(newProduct);
         }
 
         return null;
